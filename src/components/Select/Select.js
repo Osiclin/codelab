@@ -1,7 +1,7 @@
 export default function Select({ title, containerClass, options, onChange }) {
     return (
         <div className={containerClass}>
-            <label htmlFor={title} className="text-center block">{title}</label>
+            <label htmlFor={title} className="block">{title}</label>
             <select
                 id={title}
                 name={title}

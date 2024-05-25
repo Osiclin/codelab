@@ -14,14 +14,14 @@ export default function Home() {
         ageRange,
         hasFilter
     } = useHome()
-    const patt = "[0-9.\\-]+"
+    const patt = "[0-9]+"
 
     return (
         <>
             <Search
                 id="search"
                 name="search"
-                placeholder="Search by first name"
+                placeholder="Search by name"
                 containerClass="mb-[24px]"
                 onChange={handleSearch}
             />
