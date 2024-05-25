@@ -2,6 +2,7 @@ import { useMemo, useState } from "react"
 import { useDebounce } from "../../hooks/useDebounce"
 import { useGetUsersQuery } from "../../services/api/user"
 import { useSearchParams } from "react-router-dom"
+import { tryCatch } from "../../utils/tryCatch"
 
 export default function useHome() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -36,7 +37,6 @@ export default function useHome() {
     function filterByGender(dataArray, gender) {
         if (!gender) return
         const transformedGender = gender.toLowerCase();
-
         const matchingUsers = dataArray.filter(user => user.gender.toLowerCase() === transformedGender);
 
         return matchingUsers;
@@ -44,14 +44,18 @@ export default function useHome() {
 
     const users = useMemo(() => {
         let result = data?.results || []
-        if (data?.results?.length) {
-            const { min, max } = ageRange
-            if (search) result = searchByName(result, search)
-            if (selectedGender) result = filterByGender(result, selectedGender)
-            if (selectedGender) result = filterByGender(result, selectedGender)
-            if (min) result = result.filter(item => item.dob.age >= min)
-            if (max) result = result.filter(item => item.dob.age <= max)
-        }
+
+        tryCatch(() => {
+            if (data?.results?.length) {
+                const { min, max } = ageRange
+                if (search) result = searchByName(result, search)
+                if (selectedGender) result = filterByGender(result, selectedGender)
+                if (selectedGender) result = filterByGender(result, selectedGender)
+                if (min) result = result.filter(item => item.dob.age >= min)
+                if (max) result = result.filter(item => item.dob.age <= max)
+            }
+        })
+
         return result
     }, [data, search, selectedGender, ageRange])
 
